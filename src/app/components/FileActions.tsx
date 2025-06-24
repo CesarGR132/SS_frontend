@@ -19,7 +19,7 @@ export const FileActions = ({ setIsLoading }: Props) => {
       <div className="mb-4 flex flex-wrap gap-4 items-end justify-end">
         <button
           onClick={() => setIsNewFolderOpen(true)}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer"
+          className="bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 cursor-pointer"
           title="Crear nueva carpeta"
         >
           <CreateNewFolderIcon />
@@ -27,7 +27,7 @@ export const FileActions = ({ setIsLoading }: Props) => {
 
         <button
           onClick={() => setIsUploadOpen(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+          className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 cursor-pointer"
           title="Subir nuevo archivo"
         >
           <NoteAddIcon />

@@ -14,7 +14,7 @@ export const Breadcrumbs = () => {
   }, []);
 
   return (
-    <div className="flex items-center space-x-2 text-lg text-white mt-2 mb-2">
+    <div className="flex items-center w-fit h-fit rounded-3xl space-x-2 text-lg text-black mt-2 px-6 py-3 hover:scale-105 hover:bg-[#d29d46] hover:text-white transition-all duration-300">
       {path.map((node, index) => (
         <span key={node.path} className="flex items-center">
           {index > 0 && <span className="mx-1 text-gray-400">/</span>}

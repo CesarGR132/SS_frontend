@@ -34,6 +34,7 @@ export const PreviewPanel = () => {
   }, []);
 
   if (!file) return null;
+
   if (blobUrl === "error") return <div>Error al cargar archivo.</div>;
 
   const ext = file.name.split(".").pop()?.toLowerCase();

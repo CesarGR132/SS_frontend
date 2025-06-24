@@ -9,7 +9,8 @@ import { FileActions } from "./components/FileActions";
 import { PreviewPanel } from "./components/PreviewPanel";
 import { LoadingOverlay } from "./components/LoadingOverlay";
 import { fetchTree } from "./services/storageApi";
-import Image from "next/image";
+import { SignedIn, SignedOut, SignIn } from "@clerk/nextjs";
+import { Header } from "./components/Header";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,27 +23,21 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="p-6 relative">
-      <div className="flex flex-row justify-evenly items-center">
-        <Image 
-        src="/img/logo_UNEDL.png"
-        width={250}
-        height={250}
-        alt="Logo UNEDL"
-        title="UNEDL"
-        className="mb-4 border-2" 
-        />
-        <div className="w-11/12" />
-        <h1 className="text-4xl text-center font-bold mb-4">PROYECTOS INGENIERIA</h1>
-      </div>
+    <main className="p-6 relative ">
+      <SignedIn>
+        <Header />
+        <Breadcrumbs />
+        {/* <ViewToggle /> */}
+        {/* <FileActions setIsLoading={setIsLoading} /> */}
+        <FolderView setIsLoading={setIsLoading} />
+        <PreviewPanel />
 
-    <Breadcrumbs />
-    {/* <ViewToggle /> */}
-    <FileActions setIsLoading={setIsLoading} />
-    <FolderView setIsLoading={setIsLoading} />
-    <PreviewPanel />
+        {isLoading && <LoadingOverlay />}
+      </SignedIn>
 
-    {isLoading && <LoadingOverlay />}
+      <SignedOut>
+          <SignIn routing="hash" />
+      </SignedOut>    
   </main>
   );
 }

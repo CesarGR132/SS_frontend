@@ -7,7 +7,9 @@ import { driveSubject } from "../observer/DriveSubject";
 import { removeFile, removeFolder } from "../services/storageApi";
 import { refreshTree } from "../utils/refreshTree";
 import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
-
+import FolderIcon from '@mui/icons-material/Folder';
+import ArticleIcon from '@mui/icons-material/Article';
+import { FileActions } from "./FileActions";
 
 type Props = {
   setIsLoading: (loading: boolean) => void;
@@ -16,6 +18,7 @@ type Props = {
 export const FolderView = ({ setIsLoading }: Props) => {
   const [folder, setFolder] = useState<DriveNode | null>(driveSubject.getCurrentNode());
   const [viewMode, setViewMode] = useState<"grid" | "list">(driveSubject.getViewMode());
+  const [sortMode, setSortMode] = useState<"name" | "type">("name");
 
   useEffect(() => {
     const update = () => {
@@ -28,12 +31,6 @@ export const FolderView = ({ setIsLoading }: Props) => {
 
   const parentRef = useRef<HTMLDivElement | null>(null);
   const items = folder?.children ?? [];
-
-  const rowVirtualizer = useVirtualizer({
-    count: items.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => (viewMode === "grid" ? 160 : 70),
-  });
 
   const currentPath = folder?.path ?? "";
 
@@ -59,8 +56,40 @@ export const FolderView = ({ setIsLoading }: Props) => {
     }
   };
 
+  const sortedItems = [...(folder?.children ?? [])].sort((a, b) => {
+    if (sortMode === "type") {
+      return Number(b.isDirectory) - Number(a.isDirectory);
+    }
+    return a.name.localeCompare(b.name);
+  });
+
+  const rowVirtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => (viewMode === "grid" ? 160 : 70),
+  });
+
   return (
-    <div ref={parentRef} className="overflow-auto h-[70vh] border rounded">
+    <>
+    <div className="flex items-center justify-between gap-2 px-4">
+        <div className="flex items-center gap-3">
+          <span>Ordernar por:</span>
+          <button 
+            onClick={() => setSortMode("name")}
+            className="mb-2 flex gap-3 text-sm items-center bg-[#29235c] text-white px-4 py-2 rounded-xl hover:bg-[#d29d46] cursor-pointer transition-all duration-300 hover:text-black hover:scale-102 hover:rounded-4xl hover:text-white">
+            Nombre
+          </button>
+          <button 
+            onClick={() => setSortMode("type")}
+            className="mb-2 flex gap-3 text-sm items-center bg-[#29235c] text-white px-4 py-2 rounded-xl hover:bg-[#d29d46] cursor-pointer transition-all duration-300 hover:text-black hover:scale-102 hover:rounded-4xl hover:text-white">
+            Tipo
+          </button>
+        </div>
+        <FileActions setIsLoading={setIsLoading} />
+    </div>
+    
+
+    <div ref={parentRef} className="overflow-auto h-[70vh] mt-4 rounded-4xl border shadow-xl shadow-[#29235c]">
       <div
         style={{
           height: `${rowVirtualizer.getTotalSize()}px`,
@@ -68,7 +97,7 @@ export const FolderView = ({ setIsLoading }: Props) => {
         }}
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-          const item = items[virtualRow.index];
+          const item = sortedItems[virtualRow.index];
           return (
             <div
               key={item.path}
@@ -83,7 +112,7 @@ export const FolderView = ({ setIsLoading }: Props) => {
                 viewMode === "grid" ? "md:w-1/3 inline-block" : "flex items-center"
               }`}
             >
-              <div className="p-6 pl-3 text-5xl font-bold rounded w-full hover:bg-gray-100 hover:text-black flex justify-between items-center">
+              <div className="p-6 pl-3 text-5xl font-bold rounded w-full flex justify-between items-center hover:bg-[#29235c] transition-all duration-300 hover:text-black hover:scale-102 hover:cursor-pointer hover:rounded-4xl hover:text-white">
                 <div
                   className="flex-1 cursor-pointer"
                   onClick={() =>
@@ -92,7 +121,7 @@ export const FolderView = ({ setIsLoading }: Props) => {
                       : driveSubject.openFilePreview(item)
                   }
                 >
-                  {item.isDirectory ? "📁" : "📄"} {item.name}
+                  {item.isDirectory ? <FolderIcon fontSize="large"/> : <ArticleIcon fontSize="large"/>} {item.name}
                 </div>
 
                 <button
@@ -104,7 +133,7 @@ export const FolderView = ({ setIsLoading }: Props) => {
                     sx={{ 
                       color: "gray",
                       '&:hover': {
-                        color: 'red',
+                        color: '#d29d46',
                         transform: 'scale(1.1)',
                         transition: 'all 0.2s ease-in-out'
                       }
@@ -117,5 +146,6 @@ export const FolderView = ({ setIsLoading }: Props) => {
         })}
       </div>
     </div>
+    </>
   );
 };
