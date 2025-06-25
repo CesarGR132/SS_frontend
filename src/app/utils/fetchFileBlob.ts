@@ -1,4 +1,4 @@
-export async function fetchFileBlob(filePath: string): Promise<{ blobUrl: string, type: string }> {
+export async function fetchFileBlob(filePath: string) {
     console.log('fetching file');
     const response = await fetch('http://localhost:5000/api/storage/getFile', {
       method: "POST",
@@ -10,10 +10,12 @@ export async function fetchFileBlob(filePath: string): Promise<{ blobUrl: string
       throw new Error("Error al obtener el archivo");
     }
   
-    const contentType = response.headers.get("Content-Type") || "application/octet-stream";
     const blob = await response.blob();
-    const blobUrl = URL.createObjectURL(blob);
-  
-    return { blobUrl, type: contentType };
+
+    return {
+      blob,
+      blobUrl: URL.createObjectURL(blob),
+      type: blob.type,
+    };
   }
   

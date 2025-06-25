@@ -98,6 +98,7 @@ export const FolderView = ({ setIsLoading }: Props) => {
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
           const item = sortedItems[virtualRow.index];
+
           return (
             <div
               key={item.path}
