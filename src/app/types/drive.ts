@@ -6,4 +6,5 @@ export type DriveNode = {
     size?: number; // en bytes
     type?: string; // mime type
     modified?: string | number | Date; // fecha de modificación
+    owner?: string;
 }

@@ -2,7 +2,7 @@ import { cleanLastSlash } from '../utils/cleanPath'
 import { DriveNode } from '../types/drive';
 const BASE_URL = 'http://localhost:5000/api/storage';
 
-export const addNewFolder = async (folderName: string, path: string) => {
+export const addNewFolder = async (folderName: string, folderDate: string, path: string) => {
     path = cleanLastSlash(path);  // <- This is the URL cleaned from the error that cause the frontend.
     const res = await fetch(`${BASE_URL}/createNewFolder`, {  // <- This is the URL aiming to the endpoint.
         method: 'POST',

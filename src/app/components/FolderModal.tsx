@@ -13,6 +13,7 @@ type Props = {
 
 export const FolderModal = ({ isOpen, onClose, setIsLoading }: Props) => {
     const [folderName, setFolderName] = useState("");
+    const [folderDate, setFolderDate] = useState("");
 
     const handleCreateFolder = async () => {
         const path = driveSubject.getCurrentNode()?.path;
@@ -20,11 +21,11 @@ export const FolderModal = ({ isOpen, onClose, setIsLoading }: Props) => {
 
         setIsLoading(true);
         try {
-            await addNewFolder(folderName.trim(), path);
+            await addNewFolder(folderName.trim(), folderDate, path);
             await refreshTree();
             onClose();
             setFolderName("");
-            alert("fOLDER CREATED SUCCESSFULLY")
+            alert("Folder created successfully")
         } catch (err) {
             alert("Something went wrong, when creating folder")
             console.error(err);
@@ -48,13 +49,27 @@ export const FolderModal = ({ isOpen, onClose, setIsLoading }: Props) => {
 
         <h2 className="text-xl font-semibold mb-4 text-gray-900">Crear nueva carpeta</h2>
 
-        <input
-          type="text"
-          value={folderName}
-          onChange={(e) => setFolderName(e.target.value)}
-          placeholder="Nombre de la carpeta"
-          className="border px-3 py-2 rounded w-full mb-4"
-        />
+        <form  >
+          <label htmlFor="folderName">Nombre de la carpeta</label>
+          <input
+            type="text"
+            value={folderName}
+            onChange={(e) => setFolderName(e.target.value)}
+            placeholder="Nombre de la carpeta"
+            className="border px-3 py-2 rounded w-full mb-4"
+            required
+          />
+          <label htmlFor="folderDate">Fecha de creación</label>
+          <input 
+            type="date"
+            value={folderDate}
+            onChange={(e) => setFolderDate(e.target.value)}
+            className="border px-3 py-2 rounded w-full mb-4"
+            required
+          />
+            
+        </form>
+        
 
         <button
           onClick={handleCreateFolder}

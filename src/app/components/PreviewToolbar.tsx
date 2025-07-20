@@ -45,6 +45,17 @@ export const PreviewToolbar: React.FC<PreviewToolbarProps> = ({
     >
       Descargar
     </button>
+    {showOpen && (
+      <button
+        className="px-2 py-1 text-md rounded-lg border bg-[#29235c] text-white hover:bg-[#d29d46] hover:scale-105 transition-all duration-300"
+        title="Abrir en nueva pestaña"
+        onClick={() => {
+          if (blobUrl) window.open(blobUrl, '_blank');
+        }}
+      >
+        Abrir
+      </button>
+    )}
     {showFullscreen && previewRef && (
       <button
         className="px-2 py-1 text-md rounded-lg border bg-[#29235c] text-white hover:bg-[#d29d46] hover:scale-105 transition-all duration-300"
