@@ -1,6 +1,9 @@
 import { cleanLastSlash } from '../utils/cleanPath'
 import { DriveNode } from '../types/drive';
-const BASE_URL = 'http://localhost:5000/api/storage';
+import { getIpAddress } from './apiAddress';
+
+const IpAddress = getIpAddress();
+const BASE_URL = `http://${IpAddress}:5000/api/storage`;
 
 export const addNewFolder = async (folderName: string, folderDate: string, path: string) => {
     path = cleanLastSlash(path);  // <- This is the URL cleaned from the error that cause the frontend.
@@ -49,7 +52,12 @@ export const uploadFiles = async (files: FileList, destinationPath: string) => {
 };
 
 export const fetchTree = async (): Promise<DriveNode> => {
-    const response = await fetch(`${BASE_URL}/getConfig`);
-    if (!response.ok) throw new Error('Something went wrong trying to reload')
-    return await response.json();
+    try {
+        const response = await fetch(`${BASE_URL}/getConfig`);
+        if (!response.ok) throw new Error('Something went wrong trying to reload')
+        return await response.json();
+    } catch (error) {
+        console.error("error fetching tree");
+        throw error;
+    }
 };
